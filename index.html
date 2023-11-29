@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            background-image: url('https://www.unrevealedfiles.com/wp-content/uploads/2022/05/unrevealed-cicada.jpg'); /* Replace with your image URL */
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        #registrationForm {
+            background-color: rgba(255, 255, 255, 0.5); /* Reduced opacity */
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        #registrationForm label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        #registrationForm input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+        }
+
+        #registrationForm button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #successMessage {
+            display: none;
+            color: #4CAF50;
+            font-size: 24px;
+            margin-top: 20px;
+            animation: fadeIn 2s ease-out;
+        }
+
+        #errorMessage {
+            display: none;
+            color: #FF0000;
+            font-size: 18px;
+            margin-top: 20px;
+            animation: fadeIn 2s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+    <title>Event Registration</title>
+</head>
+<body>
+    <div id="registrationForm">
+        <h1>Event Registration</h1>
+        <form id="form">
+            <label for="name">Name:</label>
+            <input type="text" id="name" required>
+
+            <label for="eventName">Event Name:</label>
+            <input type="text" id="eventName" required>
+
+            <label for="branch">Branch:</label>
+            <input type="text" id="branch" required>
+
+            <label for="semester">Semester:</label>
+            <input type="text" id="semester" required>
+
+            <label for="phoneNumber">Phone Number:</label>
+            <input type="tel" id="phoneNumber" required>
+
+            <button type="button" onclick="submitForm()">Submit</button>
+        </form>
+
+        <div id="successMessage">&#10004; Successfully Registered!</div>
+        <div id="errorMessage">&#10060; Error occurred. Please try again later.</div>
+    </div>
+
+    <script>
+        function submitForm() {
+            // Hide previous messages
+            document.getElementById('successMessage').style.display = 'none';
+            document.getElementById('errorMessage').style.display = 'none';
+
+            // Get user input
+            const name = document.getElementById('name').value;
+            const eventName = document.getElementById('eventName').value;
+            const branch = document.getElementById('branch').value;
+            const semester = document.getElementById('semester').value;
+            const phoneNumber = document.getElementById('phoneNumber').value;
+
+            // Construct the data to be sent to Google Sheets
+            const data = {
+                values: [name, eventName, branch, semester, phoneNumber]
+            };
+
+            // Use the Google Sheets API to update the spreadsheet
+            fetch('https://sheets.googleapis.com/v4/spreadsheets/1OtuxEthMuglJ6vHqJ2QhZO__pBwSLqLoazoTe1r85pQ/values/Sheet1!A1:E1:append?valueInputOption=RAW&key=AIzaSyAea_knCwHvhbvxK_kwrhmGvFXs2gjTnaY', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(result => {
+                console.log('Success:', result);
+
+                // Show the success message
+                document.getElementById('successMessage').style.display = 'block';
+
+                // Optional: Reset the form or redirect the user after a successful submission
+                // document.getElementById('form').reset();
+                // window.location.href = 'thank-you-page.html';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+
+                // Show the error message
+                document.getElementById('errorMessage').style.display = 'block';
+            });
+        }
+    </script>
+</body>
+</html>
