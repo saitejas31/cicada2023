@@ -98,53 +98,54 @@
 
     <script>
         function submitForm() {
-            // Hide previous messages
-            document.getElementById('successMessage').style.display = 'none';
-            document.getElementById('errorMessage').style.display = 'none';
+    // Hide previous messages
+    document.getElementById('successMessage').style.display = 'none';
+    document.getElementById('errorMessage').style.display = 'none';
 
-            // Get user input
-            const name = document.getElementById('name').value;
-            const eventName = document.getElementById('eventName').value;
-            const branch = document.getElementById('branch').value;
-            const semester = document.getElementById('semester').value;
-            const phoneNumber = document.getElementById('phoneNumber').value;
+    // Get user input
+    const name = document.getElementById('name').value;
+    const eventName = document.getElementById('eventName').value;
+    const branch = document.getElementById('branch').value;
+    const semester = document.getElementById('semester').value;
+    const phoneNumber = document.getElementById('phoneNumber').value;
 
-            // Construct the data to be sent to Google Sheets
-            const data = {
-                values: [name, eventName, branch, semester, phoneNumber]
-            };
+    // Construct the data to be sent to Google Sheets
+    const data = {
+        values: [name, eventName, branch, semester, phoneNumber]
+    };
 
-            // Use the Google Sheets API to update the spreadsheet
-            fetch('https://sheets.googleapis.com/v4/spreadsheets/1OtuxEthMuglJ6vHqJ2QhZO__pBwSLqLoazoTe1r85pQ/values/Sheet1!A1:E1:append?valueInputOption=RAW&key=AIzaSyAea_knCwHvhbvxK_kwrhmGvFXs2gjTnaY', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data),
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(result => {
-                console.log('Success:', result);
-
-                // Show the success message
-                document.getElementById('successMessage').style.display = 'block';
-
-                // Optional: Reset the form or redirect the user after a successful submission
-                // document.getElementById('form').reset();
-                // window.location.href = 'thank-you-page.html';
-            })
-            .catch(error => {
-                console.error('Error:', error);
-
-                // Show the error message
-                document.getElementById('errorMessage').style.display = 'block';
-            });
+    // Use the Google Sheets API to update the spreadsheet
+    fetch('https://sheets.googleapis.com/v4/spreadsheets/1OtuxEthMuglJ6vHqJ2QhZO__pBwSLqLoazoTe1r85pQ/values/Sheet1!A1:E1:append?valueInputOption=RAW&key=AIzaSyAea_knCwHvhbvxK_kwrhmGvFXs2gjTnaY', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`Network response was not ok (${response.status} - ${response.statusText})`);
         }
+        return response.json();
+    })
+    .then(result => {
+        console.log('Success:', result);
+
+        // Show the success message
+        document.getElementById('successMessage').style.display = 'block';
+
+        // Optional: Reset the form or redirect the user after a successful submission
+        // document.getElementById('form').reset();
+        // window.location.href = 'thank-you-page.html';
+    })
+    .catch(error => {
+        console.error('Error:', error);
+
+        // Show the error message
+        document.getElementById('errorMessage').style.display = 'block';
+    });
+}
+
     </script>
 </body>
 </html>
